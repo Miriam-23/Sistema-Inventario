@@ -1,0 +1,43 @@
+
+name: Integracion Continua Python
+
+# Eventos que activan el workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Trabajos que ejecutará el workflow
+jobs:
+  verificar-proyecto:
+    name: Verificar proyecto Python
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el codigo del repositorio
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v4
+
+      # 2. Configurar la version de Python
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 3. Actualizar pip e instalar dependencias
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Verificar la sintaxis del codigo
+      - name: Comprobar sintaxis
+        run: python -m compileall -q .
+
+      # 5. Ejecutar pruebas automatizadas
+      - name: Ejecutar pruebas
+        run: python -m pytest

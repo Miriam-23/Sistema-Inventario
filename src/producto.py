@@ -28,27 +28,37 @@ def mostrar_productos():
 
 
 # Menú principal
-while True:
-    print("\n===== MENÚ DE PRODUCTOS =====")
-    print("1. Agregar producto")
-    print("2. Buscar producto")
-    print("3. Mostrar productos")
-    print("4. Salir")
+# Aquí permanecen tus clases y funciones existentes.
+# No necesitas modificarlas.
+def main():
+    while True:
+        print("\n===== MENÚ DE PRODUCTOS =====")
+        print("1. Agregar producto")
+        print("2. Buscar producto")
+        print("3. Mostrar productos")
+        print("4. Salir")
 
-    opcion = input("Selecciona una opción: ")
+        opcion = input("Selecciona una opción: ")
 
-    if opcion == "1":
-        agregar_producto()
+        if opcion == "1":
+            # Aquí va tu código actual para agregar productos
+            pass
 
-    elif opcion == "2":
-        buscar_producto()
+        elif opcion == "2":
+            # Aquí va tu código actual para buscar productos
+            pass
 
-    elif opcion == "3":
-        mostrar_productos()
+        elif opcion == "3":
+            # Aquí va tu código actual para mostrar productos
+            pass
 
-    elif opcion == "4":
-        print("Saliendo del programa...")
-        break
+        elif opcion == "4":
+            print("Saliendo del sistema...")
+            break
 
-    else:
-        print("Opción no válida. Intenta nuevamente.")
+        else:
+            print("Opción no válida")
+
+
+if __name__ == "__main__":
+    main()

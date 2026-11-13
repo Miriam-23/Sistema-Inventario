@@ -9,6 +9,8 @@ sys.path.insert(0, ruta_src)
 
 import pytest
 from unittest.mock import patch
+from contextlib import redirect_stdout
+from io import StringIO
 import producto
 
 
@@ -18,64 +20,98 @@ def limpiar_productos():
     producto.productos.clear()
 
 
-# PRUEBA 1: Agregar un producto
-def test_agregar_producto():
+# Función auxiliar para crear un producto
+def crear_teclado():
+    datos = ["P001", "Teclado", "350", "10"]
 
-    with patch("builtins.input", return_value="Laptop"):
-        with patch("builtins.print") as mock_print:
-            producto.agregar_producto()
-
-    assert "Laptop" in producto.productos
-
-    mock_print.assert_called_with(
-        "Producto 'Laptop' agregado correctamente."
-    )
+    with patch("builtins.input", side_effect=datos):
+        producto.agregar_producto()
 
 
-# PRUEBA 2: Buscar un producto existente
-def test_buscar_producto_existente():
+# CP01: Crear un producto
+def test_CP01_crear_producto():
+    crear_teclado()
 
-    producto.productos.append("Mouse")
-
-    with patch("builtins.input", return_value="Mouse"):
-        with patch("builtins.print") as mock_print:
-            producto.buscar_producto()
-
-    mock_print.assert_called_with(
-        "El producto 'Mouse' sí existe en la lista."
-    )
+    assert len(producto.productos) == 1
+    assert producto.productos[0]["codigo"] == "P001"
+    assert producto.productos[0]["nombre"] == "Teclado"
+    assert producto.productos[0]["precio"] == 350
+    assert producto.productos[0]["existencia"] == 10
 
 
-# PRUEBA 3: Buscar un producto inexistente
-def test_buscar_producto_inexistente():
+# CP02: Mostrar el código
+def test_CP02_mostrar_codigo():
+    crear_teclado()
 
-    with patch("builtins.input", return_value="Teclado"):
-        with patch("builtins.print") as mock_print:
-            producto.buscar_producto()
+    resultado = producto.buscar_producto("P001")
 
-    mock_print.assert_called_with(
-        "El producto 'Teclado' no se encuentra en la lista."
-    )
+    assert resultado["codigo"] == "P001"
 
 
-# PRUEBA 4: Mostrar lista vacía
-def test_mostrar_productos_vacia():
+# CP03: Mostrar el nombre
+def test_CP03_mostrar_nombre():
+    crear_teclado()
 
-    with patch("builtins.print") as mock_print:
-        producto.mostrar_productos()
+    resultado = producto.buscar_producto("P001")
 
-    mock_print.assert_any_call("No hay productos registrados.")
+    assert resultado["nombre"] == "Teclado"
 
 
-# PRUEBA 5: Mostrar productos registrados
-def test_mostrar_productos():
+# CP04: Mostrar el precio
+def test_CP04_mostrar_precio():
+    crear_teclado()
 
-    producto.productos.extend(["Laptop", "Mouse", "Teclado"])
+    resultado = producto.buscar_producto("P001")
 
-    with patch("builtins.print") as mock_print:
-        producto.mostrar_productos()
+    assert resultado["precio"] == 350
 
-    mock_print.assert_any_call("1. Laptop")
-    mock_print.assert_any_call("2. Mouse")
-    mock_print.assert_any_call("3. Teclado")
 
+# CP05: Mostrar la existencia
+def test_CP05_mostrar_existencia():
+    crear_teclado()
+
+    resultado = producto.buscar_producto("P001")
+
+    assert resultado["existencia"] == 10
+
+
+# CP06: Mostrar información completa
+def test_CP06_mostrar_informacion_completa():
+    crear_teclado()
+
+    resultado = producto.buscar_producto("P001")
+
+    salida = StringIO()
+
+    with redirect_stdout(salida):
+        producto.mostrar_informacion(resultado)
+
+    informacion = salida.getvalue()
+
+    assert "Código: P001" in informacion
+    assert "Nombre: Teclado" in informacion
+    assert "Precio: 350.0" in informacion
+    assert "Existencia: 10" in informacion
+
+
+# CP07: Crear un segundo producto
+def test_CP07_crear_segundo_producto():
+    crear_teclado()
+
+    datos = ["P002", "Mouse", "180", "5"]
+
+    with patch("builtins.input", side_effect=datos):
+        producto.agregar_producto()
+
+    assert len(producto.productos) == 2
+
+    primero = producto.buscar_producto("P001")
+    segundo = producto.buscar_producto("P002")
+
+    assert primero["nombre"] == "Teclado"
+    assert primero["precio"] == 350
+    assert primero["existencia"] == 10
+
+    assert segundo["nombre"] == "Mouse"
+    assert segundo["precio"] == 180
+    assert segundo["existencia"] == 5

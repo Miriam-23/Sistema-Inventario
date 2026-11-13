@@ -1,20 +1,33 @@
+
 productos = []
 
+
 def agregar_producto():
-    producto = input("Ingresa el nombre del producto: ")
+    print("\n--- AGREGAR PRODUCTO ---")
+
+    codigo = input("Ingresa el código: ")
+    nombre = input("Ingresa el nombre: ")
+    precio = float(input("Ingresa el precio: "))
+    existencia = int(input("Ingresa la existencia: "))
+
+    producto = {
+        "codigo": codigo,
+        "nombre": nombre,
+        "precio": precio,
+        "existencia": existencia
+    }
 
     productos.append(producto)
 
-    print(f"Producto '{producto}' agregado correctamente.")
+    print(f"Producto '{nombre}' agregado correctamente.")
 
 
-def buscar_producto():
-    producto = input("Ingresa el producto que deseas buscar: ")
+def buscar_producto(codigo):
+    for producto in productos:
+        if producto["codigo"] == codigo:
+            return producto
 
-    if producto in productos:
-        print(f"El producto '{producto}' sí existe en la lista.")
-    else:
-        print(f"El producto '{producto}' no se encuentra en la lista.")
+    return None
 
 
 def mostrar_productos():
@@ -23,13 +36,18 @@ def mostrar_productos():
     if len(productos) == 0:
         print("No hay productos registrados.")
     else:
-        for i, producto in enumerate(productos, start=1):
-            print(f"{i}. {producto}")
+        for producto in productos:
+            mostrar_informacion(producto)
 
 
-# Menú principal
-# Aquí permanecen tus clases y funciones existentes.
-# No necesitas modificarlas.
+def mostrar_informacion(producto):
+    print("\n--- INFORMACIÓN DEL PRODUCTO ---")
+    print(f"Código: {producto['codigo']}")
+    print(f"Nombre: {producto['nombre']}")
+    print(f"Precio: {producto['precio']}")
+    print(f"Existencia: {producto['existencia']}")
+
+
 def main():
     while True:
         print("\n===== MENÚ DE PRODUCTOS =====")
@@ -41,16 +59,19 @@ def main():
         opcion = input("Selecciona una opción: ")
 
         if opcion == "1":
-            # Aquí va tu código actual para agregar productos
-            pass
+            agregar_producto()
 
         elif opcion == "2":
-            # Aquí va tu código actual para buscar productos
-            pass
+            codigo = input("Ingresa el código que deseas buscar: ")
+            producto = buscar_producto(codigo)
+
+            if producto:
+                mostrar_informacion(producto)
+            else:
+                print("Producto no encontrado.")
 
         elif opcion == "3":
-            # Aquí va tu código actual para mostrar productos
-            pass
+            mostrar_productos()
 
         elif opcion == "4":
             print("Saliendo del sistema...")

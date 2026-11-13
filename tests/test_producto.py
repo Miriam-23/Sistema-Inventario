@@ -79,6 +79,3 @@ def test_mostrar_productos():
     mock_print.assert_any_call("2. Mouse")
     mock_print.assert_any_call("3. Teclado")
 
-
-def test_error_intencional_release():
-    assert 1 == 2, "Error intencional para comprobar RELEASE"

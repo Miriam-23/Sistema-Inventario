@@ -1,3 +1,12 @@
+import sys
+import os
+# Agregar la carpeta src a las rutas de búsqueda
+ruta_src = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', 'src')
+)
+
+sys.path.insert(0, ruta_src)
+
 import pytest
 from unittest.mock import patch
 import producto

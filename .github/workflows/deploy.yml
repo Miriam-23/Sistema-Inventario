@@ -1,0 +1,55 @@
+
+name: Despliegue del Sistema de Inventario
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Preparar despliegue v1.0.3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar versión liberada
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v1.0.3 \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "sistema-inventario-v1.0.3.zip"
+
+      - name: Preparar directorio de despliegue
+        run: |
+          mkdir -p despliegue
+          unzip sistema-inventario-v1.0.3.zip -d despliegue
+
+      - name: Verificar archivos del sistema
+        run: |
+          echo "Contenido del paquete:"
+          ls -la despliegue
+          echo "Archivos encontrados:"
+          find despliegue -maxdepth 4 -type f
+
+      - name: Configurar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Verificar entorno Python
+        run: |
+          python --version
+          python -m pip --version
+
+      - name: Comprobar archivo principal
+        run: |
+          test -f despliegue/main.py
+          echo "Archivo main.py encontrado correctamente"
+
+      - name: Confirmar preparación del despliegue
+        run: |
+          echo "Despliegue preparado correctamente"
+          echo "Versión: v1.0.3"
+          echo "Entorno: GitHub Actions Ubuntu"
